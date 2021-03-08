@@ -1,7 +1,7 @@
 require 'oystercard'
 
 describe Oystercard do
-  test_card = Oystercard.new(20)
+  let(:test_card) { Oystercard.new(20) }
   it "has a balance of zero" do
     expect(subject.balance).to eq(0)
   end
@@ -12,15 +12,6 @@ describe Oystercard do
     end
     it "will return an error if the total would exceed the default maximum" do
       expect { subject.top_up(1 + subject.default_maximum) }.to raise_error("Top-up exceeds the predetermined maximum")
-    end
-  end
-
-  describe 'deduct' do
-    it 'deducts a fare from the balance of the card' do
-      expect { test_card.deduct(15) }.to change { test_card.balance }.by -15
-    end
-    it "will return an error if the deducted amount exceeds the total remaining" do
-      expect { test_card.deduct(10) }.to raise_error("The deducted amount exceeds the total remaining balance") 
     end
   end
 
@@ -35,10 +26,21 @@ describe Oystercard do
   end
 
   describe 'touch_out' do
-    it "touches out a card and sets the journey to false" do
+    before do
       # How can we isolate this unit test?
       test_card.touch_in
+    end
+
+    it "touches out a card and sets the journey to false" do
       expect { test_card.touch_out }.to change { test_card.journey }.to be false
+    end
+
+    it "touching out deducts the minimum fare" do
+      expect { test_card.touch_out }.to change { test_card.balance }.by -Oystercard::DEFAULT_MINIMUM
+    end
+
+    it "will return an error if the deducted amount exceeds the total remaining" do
+      expect { subject.touch_out }.to raise_error("The deducted amount exceeds the total remaining balance") 
     end
   end
 end
@@ -66,3 +68,7 @@ end
 # In order to pay for my journey
 # As a customer
 # I need to have the minimum amount (£1) for a single journey.
+
+# In order to pay for my journey
+# As a customer
+# When my journey is complete, I need the correct amount deducted from my card

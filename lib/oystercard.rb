@@ -15,22 +15,24 @@ class Oystercard
     @balance += money
   end
 
-  def deduct(money)
-    fail "The deducted amount exceeds the total remaining balance" if @balance - money < 0
-    @balance -= money
-  end
-
   def touch_in
     fail "Not enough money to touch in" if @balance < DEFAULT_MINIMUM
     @journey = true
   end
 
   def touch_out
+    deduct(DEFAULT_MINIMUM)
     @journey = false
   end
 
-  private def in_journey?
+  private 
+  
+  def in_journey?
     @journey
   end
 
+  def deduct(money)
+    fail "The deducted amount exceeds the total remaining balance" if @balance - money < 0
+    @balance -= money
+  end
 end
