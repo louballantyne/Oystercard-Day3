@@ -1,4 +1,5 @@
 class Oystercard
+  
   DEFAULT_MAXIMUM = 90
   DEFAULT_MINIMUM = 1
 
