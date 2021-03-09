@@ -1,4 +1,4 @@
-require 'oystercard'
+#require 'oystercard'
 
 class Station
 
@@ -13,7 +13,7 @@ class Station
   end
 
   private
-  
+
   def store_station(name, zone)
     @@station_zone[name] = zone
   end
