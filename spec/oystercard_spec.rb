@@ -2,8 +2,13 @@ require 'oystercard'
 
 describe Oystercard do
   let(:test_card) { Oystercard.new(20) }
+  
   it "has a balance of zero" do
     expect(subject.balance).to eq(0)
+  end
+
+  it "has an empty list of journeys by default" do
+    expect(subject.history).to eq []
   end
 
   describe 'top_up' do
@@ -36,15 +41,15 @@ describe Oystercard do
     end
 
     it "touching out deducts the minimum fare" do
-      expect { test_card.touch_out }.to change { test_card.balance }.by -Oystercard::DEFAULT_MINIMUM
+      expect { test_card.touch_out("Hampstead") }.to change { test_card.balance }.by -Oystercard::DEFAULT_MINIMUM
     end
 
     it "will return an error if the deducted amount exceeds the total remaining" do
-      expect { subject.touch_out }.to raise_error("The deducted amount exceeds the total remaining balance") 
+      expect { subject.touch_out("Hampstead") }.to raise_error("The deducted amount exceeds the total remaining balance") 
     end
 
     it 'changes the start_location to nil on touch out' do
-      expect { test_card.touch_out }
+      expect { test_card.touch_out("Hampstead") }
       .to change { test_card.start_location }.to(nil)
     end
   end
@@ -81,3 +86,7 @@ end
 # In order to pay for my journey
 # As a customer
 # I need to know where I've travelled from
+
+# In order to know where I have been
+# As a customer
+# I want to see all my previous trips
