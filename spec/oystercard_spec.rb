@@ -43,5 +43,18 @@ describe Oystercard do
       expect { test_card.touch_out("Euston") }
       .to change { test_card.balance }.by -Oystercard::DEFAULT_MINIMUM
     end
+
+    it "touching out deducts a penalty fare if there has been no touch in" do
+      test_card = Oystercard.new(20)
+      expect { test_card.touch_out("Euston") }
+      .to change { test_card.balance }.by -6
+    end
+
+    it "touching in deducts a penalty fare if there has been no touch out" do
+      test_card = Oystercard.new(20)
+      test_card.touch_in("Angel")
+      expect { test_card.touch_in("Euston") }
+      .to change { test_card.balance }.by -6
+    end
   end
 end

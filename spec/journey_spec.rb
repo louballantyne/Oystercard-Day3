@@ -22,5 +22,15 @@ describe Journey do
       expect { test_journey.journey_end("Hampstead") }
       .to change { test_journey.start_location }.to(nil)
     end
+
+    describe 'get journeys' do
+      before do
+        test_journey.instance_variable_set(:@start_location, "Euston")
+      end
+      it 'returns a list of previous journeys' do
+        expect{ test_journey.journey_end("Hampstead") }
+        .to change { test_journey.history }.to([{ :start => "Euston", :end => "Hampstead" }])
+      end
+    end
   end
 end
