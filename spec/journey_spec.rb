@@ -1,7 +1,7 @@
 require 'journey'
 
 describe Journey do
-  let(:test_journey) { Journey.new }
+  let(:test_journey) { Journey.new(Oystercard.new(10)) }
 
   it "has an empty list of journeys by default" do
     expect(test_journey.history).to eq []
@@ -21,7 +21,6 @@ describe Journey do
     it 'changes the start_location to nil' do
       expect { test_journey.journey_end("Hampstead") }
       .to change { test_journey.start_location }.to(nil)
-    end    
+    end
   end
 end
-
