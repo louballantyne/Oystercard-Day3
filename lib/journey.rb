@@ -1,30 +1,15 @@
 class Journey
-  attr_reader :start_location, :history
+  attr_accessor :start_station, :end_station
 
-  def initialize(oystercard)
-    @history = []
-    @card = oystercard
+  def initialize
   end
 
-  def journey_start(station)
-    store_journey if @start_location!=nil
-    @end_location = nil
-    @start_location = station
+  def set_start_station(station)
+    @start_station = station
   end
 
-  def journey_end(station)
-    @end_location = station
-    store_journey
-    @start_location = nil
-  end
-
-  def in_journey?
-    @start_location != nil
-  end
-
-  def store_journey
-    @history << { :start => @start_location, :end => @end_location }
-    (@start_location == nil || @end_location == nil) ? @card.calc_fare(true) : @card.calc_fare(false)
+  def set_end_station(station)
+    @end_station = station
   end
 
 end

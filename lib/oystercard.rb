@@ -1,5 +1,6 @@
 #require 'station'
 #require 'journey'
+#ßrequire 'journeylog'
 
 class Oystercard
 
@@ -8,31 +9,41 @@ class Oystercard
   PENALTY_FARE = 6
   attr_reader :balance, :default_maximum
 
-  def initialize(balance = 0, journey = Journey.new(self))
+  def initialize(balance = 0, journeylog = JourneyLog.new(self))
     @balance = balance
-    @journey = journey
+    @journeylog = journeylog
   end
 
   def top_up(money)
-      fail "Top-up exceeds the predetermined maximum" if @balance + money >  DEFAULT_MAXIMUM
+    fail "Top-up exceeds the predetermined maximum" if @balance + money >  DEFAULT_MAXIMUM
     @balance += money
   end
 
   def touch_in(station)
     fail "Not enough money to touch in" if @balance < DEFAULT_MINIMUM
-    @journey.journey_start(station)
+    @journeylog.start_journey(station)
   end
 
   def touch_out(station)
-    @journey.journey_end(station)
+    @journeylog.end_journey(station)
   end
 
   def get_journeys
-    @journey.history
+    @journeylog.history.clone
   end
 
   def calc_fare(penalty)
-    penalty == true ? deduct(PENALTY_FARE) : deduct(DEFAULT_MINIMUM)
+    if penalty == true
+      deduct(PENALTY_FARE)
+      puts "Penalty fare deducted"
+    else
+      deduct(DEFAULT_MINIMUM)
+      puts "Fare deducted"
+    end
+  end
+
+  def current_journey
+    @journeylog.current_journey
   end
 
   private

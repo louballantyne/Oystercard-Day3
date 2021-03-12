@@ -2,10 +2,11 @@ require 'oystercard'
 require 'journey'
 
 describe Oystercard do
+
   let(:test_card) { Oystercard.new(10) }
 
-  it "has a balance of zero" do
-    expect(subject.balance).to eq(0)
+  it "has a balance of 10" do
+    expect(test_card.balance).to eq(10)
   end
 
   describe 'top_up' do
@@ -18,11 +19,14 @@ describe Oystercard do
   end
 
   describe 'touch_in' do
-    # can we call touch_in without specifying a station
-    # default value no appropriate in method - buggy.
-
     it 'will return an error if the card has less than £1 balance' do
       expect { subject.touch_in("Euston") }.to raise_error("Not enough money to touch in")
+    end
+    it 'will ask Journeylog to start a journey' do
+      journeylog = double(:journeylog_double)
+      card = Oystercard.new(10, journeylog)
+      expect(journeylog).to receive(:start_journey).with("Euston")
+      card.touch_in("Euston")
     end
   end
 
